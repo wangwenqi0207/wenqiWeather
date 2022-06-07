@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import'./rem'
 import './index.css';
 import './weatherIcon.css'
+import './font.css'
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
