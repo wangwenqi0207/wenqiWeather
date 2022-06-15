@@ -2,7 +2,7 @@ import React  from 'react'
 import { morning,afternoon,night } from './background'
 import './weather.css'
 import getTime from './time'
-// ​import BMap from 'BMap'
+import getIcon from './weatherIcon'
 
 function getBg(){
   const time = getTime()
@@ -24,8 +24,13 @@ function getBg(){
 
 class Weather extends React.Component {
   state = {
-    list:[{date:'TOMORROW',t:'28℃'},{date:'TOMORROW',t:'28℃'},{date:'TOMORROW',t:'28℃'}],
     isPopup:false,
+    mask:false,
+    province:'',
+    city:'',
+    list:[],
+    now:[],
+    today:''
   };
 
   componentDidMount(){
@@ -33,36 +38,74 @@ class Weather extends React.Component {
   }
 
   getLocation = ()=> {
+    this.setState({
+      mask:true
+    })
     const { BMap } = window;
     const geolocation = new BMap.Geolocation();
     geolocation.getCurrentPosition(r=> {
-      console.log(r,'r')
+      if(r){
+        const province = r.address.province
+        const city = r.address.city
+        this.getThreeday(city)
+        this.setState({
+          province,
+          city
+        })
+      }
      }) 
   }
 
   closePopup = ()=>{
     this.setState({
-      isPopup:false
+      isPopup:false,
+      mask:false
     })
   }
 
   onClickSearch = ()=>{
     this.setState({
-      isPopup:true
+      isPopup:true,
+      mask:true
     })
+  }
+
+  getThreeday = (city)=>{
+    fetch(`https://free-api.heweather.net/s6/weather?location=${city}&key=e974a4265f5b48ab9b760dfab6614854`).then(res => {
+            if (res.ok) {
+                res.json().then(data => {
+                    if(data && data.HeWeather6 && data.HeWeather6.length>0){
+                      this.setState({
+                        mask:false
+                      })
+                      const list = data.HeWeather6[0].daily_forecast
+                      const now = data.HeWeather6[0].now
+                      const today = list[0].date
+                      this.setState({
+                        list,
+                        today,
+                        now
+                      })
+                    }
+                })
+    }})
   }
 
 
   render() {
-    const { list ,isPopup} = this.state;
+    const { list ,isPopup,mask,province,city,today,now} = this.state;
+    // console.log(now)
     return (
         <div className="Weather" style={getBg()}>
         <header className='header'>
           <div>
-            <h3>{'陕西省.西安'}</h3>
+            {
+              (province && city) ?
+              <h3>{`${province}.${city}`}</h3>:null
+            }
             <div className='header-date'>
               <span className='header-week'>TODAY</span>
-              <span>2022.6.1</span>
+              <span>{today}</span>
             </div>
           </div>
           <div className='header-icon' onClick={this.onClickSearch}>
@@ -70,16 +113,17 @@ class Weather extends React.Component {
           </div>
         </header>
         <main  className="main">
-            main
+            <div>{getIcon(now['cond_txt'])}</div>
+            <div className='now-tmp'>{now['tmp']}°</div>
         </main>
         <footer>
           <ul>
             {
               list && list.map((item,index)=>{
                 return(
-                  <li className='list-text' key={item.date+index}>
+                  <li className='list-text' key={item.date}>
                     <p>{item.date}</p>
-                    <p>{item.t}</p>
+                    <p>{item.hum}°</p>
                   </li> 
                 )
               })
@@ -95,7 +139,7 @@ class Weather extends React.Component {
           </div>:null
         }
         {
-          isPopup ? 
+          mask ? 
           <div className='weather-mask' onClick={this.closePopup}/>:null
         }   
     </div>

@@ -78,7 +78,6 @@ footer li{
     height: 7rem;
     background: #fff;
     border-radius: 0.5rem;
-    opacity: 0.7;
     color: #000;
 }
 
@@ -90,8 +89,26 @@ footer li{
     z-index: 10;
 }
 
-
-svg{
+.header-icon svg{
     width: 1rem;
     height: 1rem;
 }
+
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.main svg{
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: #fff;
+  }
+
+  .now-tmp{
+    text-align: center;
+    font-size: 1.6rem;
+  }
+  
+
