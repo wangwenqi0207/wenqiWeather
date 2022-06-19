@@ -87,6 +87,10 @@ footer li{
     height: 100%;
     background-color: rgba(0,0,0,0.7);
     z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .header-icon svg{
@@ -110,5 +114,42 @@ footer li{
     text-align: center;
     font-size: 1.6rem;
   }
+
+  .loading-icon{
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top: 4px solid #fff;
+        border-left: 4px solid #fff;
+        animation: rotate 3s infinite linear;
+  }
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+footer ul{
+    margin-bottom: 0;
+}
   
+.check-btn-box{
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    margin-top: .3rem;
+}
+.check-btn-box .check-btn{
+    font-size: .7rem;
+    margin-top: 0;
+}
+.more-icon{
+    width: 0.6rem;
+    fill: #fff;
+    font-weight: 600;
+    margin-top: 0.1rem;
+    margin-left: .1rem;
+}
 

@@ -1,4 +1,4 @@
-import {IconSnow,IconRain,Sunshine} from './Icon'
+import {IconSnow,IconRain,Sunshine,SunCloud} from './Icon'
 
 const getIcon = (name)=>{
     switch (name)
@@ -12,6 +12,12 @@ const getIcon = (name)=>{
     case '雪':
       return <IconSnow/>;
       break;
+    case '多云':
+        return <SunCloud/>;
+        break;
+    case '阴':
+        return <SunCloud/>;
+          break;
     default:return  <Sunshine/>;
     }
 }
