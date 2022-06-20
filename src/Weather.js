@@ -76,7 +76,8 @@ class Weather extends React.Component {
                 res.json().then(data => {
                     if(data && data.HeWeather6 && data.HeWeather6.length>0){
                       this.setState({
-                        mask:false
+                        mask:false,
+                        isPopup:false,
                       })
                       const list = data.HeWeather6[0].daily_forecast
                       const now = data.HeWeather6[0].now
@@ -91,10 +92,25 @@ class Weather extends React.Component {
     }})
   }
 
+  changeCity = (e)=>{
+    const value  = e.target.value
+    this.setState({
+      city:value
+    })
+  }
+
+  onSubmit = ()=>{
+    const { city } =this.state
+    this.setState({
+      mask:true
+    })
+    this.getThreeday(city)
+  }
+
 
   render() {
     const { list ,isPopup,mask,province,city,today,now} = this.state;
-    // console.log(now)
+    const time = getTime()
     return (
         <div className="Weather" style={getBg()}>
         <header className='header'>
@@ -139,7 +155,11 @@ class Weather extends React.Component {
           isPopup ?
           <div className='weather-popup-box'>
             <div className='weather-popup'>
-              弹窗
+             <input type="text" placeholder='city' value={city} onChange={this.changeCity}/>
+             <div className='weather-popup-btn'>
+                <button onClick={this.closePopup}>取消</button>
+                <button onClick={this.onSubmit}>确认</button>
+             </div>
             </div>
           </div>:null
         }
@@ -152,7 +172,7 @@ class Weather extends React.Component {
             }
              {
               !isPopup ?
-              <p>loading...</p>:null
+              <p>{time}</p>:null
             }  
           </div>:null
         }   

@@ -2,3 +2,8 @@
     font-family: accid;  
     src: url('../public/accid.ttf');
 }
+
+@font-face {  
+    font-family: mingda;  
+    src: url('../public/mingda.ttf');
+}
