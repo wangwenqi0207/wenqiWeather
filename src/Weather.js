@@ -157,8 +157,8 @@ class Weather extends React.Component {
             <div className='weather-popup'>
              <input type="text" placeholder='city' value={city} onChange={this.changeCity}/>
              <div className='weather-popup-btn'>
-                <button onClick={this.closePopup}>取消</button>
-                <button onClick={this.onSubmit}>确认</button>
+                <button onClick={this.closePopup} className='cancel-btn'>取消</button>
+                <button onClick={this.onSubmit} className='cancel-submit'>确认</button>
              </div>
             </div>
           </div>:null
