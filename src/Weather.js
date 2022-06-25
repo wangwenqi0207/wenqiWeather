@@ -1,4 +1,6 @@
 import React  from 'react'
+import { connect } from 'react-redux';
+import { getThreedayWeather,addCity,addProvince } from './store/actionType'
 import { morning,afternoon,night } from './background'
 import './weather.css'
 import getTime from './time'
@@ -26,34 +28,38 @@ class Weather extends React.Component {
   state = {
     isPopup:false,
     mask:false,
-    province:'',
-    city:'',
-    list:[],
-    now:[],
-    today:''
   };
 
   componentDidMount(){
     this.getLocation()
   }
 
-  getLocation = ()=> {
+   getLocation = async ()=> {
     this.setState({
       mask:true
     })
-    const { BMap } = window;
-    const geolocation = new BMap.Geolocation();
-    geolocation.getCurrentPosition(r=> {
-      if(r){
-        const province = r.address.province
-        const city = r.address.city
-        this.getThreeday(city)
-        this.setState({
-          province,
-          city
-        })
+    const { city } = this.props
+    if(city){
+      const res =  await this.props.getThreedayWeather(city)
+      if(res && res.HeWeather6){
+        this.getThreeday()
       }
-     }) 
+    }else{
+      const { BMap } = window;
+      const geolocation = new BMap.Geolocation();
+      geolocation.getCurrentPosition(async r=> {
+        if(r){
+          const province = r.address.province
+          const city = r.address.city
+          this.props.addCity(city)
+          this.props.addProvince(province)
+          const res =  await this.props.getThreedayWeather(city)
+          if(res && res.HeWeather6){
+            this.getThreeday()
+          }
+        }
+       }) 
+    }
   }
 
   closePopup = ()=>{
@@ -70,46 +76,35 @@ class Weather extends React.Component {
     })
   }
 
-  getThreeday = (city)=>{
-    fetch(`https://free-api.heweather.net/s6/weather?location=${city}&key=e974a4265f5b48ab9b760dfab6614854`).then(res => {
-            if (res.ok) {
-                res.json().then(data => {
-                    if(data && data.HeWeather6 && data.HeWeather6.length>0){
-                      this.setState({
-                        mask:false,
-                        isPopup:false,
-                      })
-                      const list = data.HeWeather6[0].daily_forecast
-                      const now = data.HeWeather6[0].now
-                      const today = list[0].date
-                      this.setState({
-                        list,
-                        today,
-                        now
-                      })
-                    }
-                })
-    }})
+  getThreeday = ()=>{
+     if(this.props.list && this.props.list.length>0){
+          this.setState({
+            mask:false,
+            isPopup:false,
+        })
+      }
   }
 
   changeCity = (e)=>{
     const value  = e.target.value
-    this.setState({
-      city:value
-    })
+    this.props.addCity(value)
   }
 
-  onSubmit = ()=>{
-    const { city } =this.state
+  onSubmit = async ()=>{
+    const { city } =this.props
     this.setState({
       mask:true
     })
-    this.getThreeday(city)
+    const res =  await this.props.getThreedayWeather(city)
+    if(res && res.HeWeather6){
+      this.getThreeday()
+    }
   }
 
 
   render() {
-    const { list ,isPopup,mask,province,city,today,now} = this.state;
+    const { isPopup,mask } = this.state;
+    const {list,city,province,now,today} =this.props
     const time = getTime()
     return (
         <div className="Weather" style={getBg()}>
@@ -135,7 +130,7 @@ class Weather extends React.Component {
         <footer>
           <ul>
             {
-              list && list.map((item,index)=>{
+              list && list.length>0 && list.map((item,index)=>{
                 return(
                   <li className='list-text' key={item.date}>
                     <p>{item.date}</p>
@@ -155,7 +150,7 @@ class Weather extends React.Component {
           isPopup ?
           <div className='weather-popup-box'>
             <div className='weather-popup'>
-             <input type="text" placeholder='city' value={city} onChange={this.changeCity}/>
+             <input type="text" placeholder='请输入城市' value={city} onChange={this.changeCity}/>
              <div className='weather-popup-btn'>
                 <button onClick={this.closePopup} className='cancel-btn'>取消</button>
                 <button onClick={this.onSubmit} className='cancel-submit'>确认</button>
@@ -181,4 +176,13 @@ class Weather extends React.Component {
   }
 }
 
-export default Weather
+
+const mapStateToProps =state=>({
+  city:state.city,
+  list:state.list,
+  now:state.now,
+  today:state.today,
+  province:state.province
+})
+
+export default connect(mapStateToProps,{getThreedayWeather,addCity,addProvince})(Weather)
