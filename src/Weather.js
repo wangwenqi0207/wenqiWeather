@@ -28,6 +28,7 @@ class Weather extends React.Component {
   state = {
     isPopup:false,
     mask:false,
+    city:''
   };
 
   componentDidMount(){
@@ -51,6 +52,9 @@ class Weather extends React.Component {
         if(r){
           const province = r.address.province
           const city = r.address.city
+          this.setState({
+            city,
+          })
           this.props.addCity(city)
           this.props.addProvince(province)
           const res =  await this.props.getThreedayWeather(city)
@@ -62,12 +66,6 @@ class Weather extends React.Component {
     }
   }
 
-  closePopup = ()=>{
-    this.setState({
-      isPopup:false,
-      mask:false
-    })
-  }
 
   onClickSearch = ()=>{
     this.setState({
@@ -90,13 +88,28 @@ class Weather extends React.Component {
     this.props.addCity(value)
   }
 
+  closePopup = ()=>{
+    this.setState({
+      isPopup:false,
+      mask:false
+    })
+
+    let mycity = this.props.city || this.state.city
+    this.props.addCity(mycity)
+  }
+
   onSubmit = async ()=>{
     const { city } =this.props
     this.setState({
       mask:true
     })
-    const res =  await this.props.getThreedayWeather(city)
+    let mycity = city || this.state.city
+    const res =  await this.props.getThreedayWeather(mycity)
     if(res && res.HeWeather6){
+      if(this.props.status !=='ok'){
+        alert('请求城市错误，请重试')
+      }
+      this.props.addCity(mycity)
       this.getThreeday()
     }
   }
@@ -182,7 +195,8 @@ const mapStateToProps =state=>({
   list:state.list,
   now:state.now,
   today:state.today,
-  province:state.province
+  province:state.province,
+  status:state.status
 })
 
 export default connect(mapStateToProps,{getThreedayWeather,addCity,addProvince})(Weather)
