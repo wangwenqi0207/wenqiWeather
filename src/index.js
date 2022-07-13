@@ -1,19 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 import'./rem'
-import './index.css';
-import './weatherIcon.css'
-import './font.css'
-import Weather from './Weather';
+import './style/index.css';
+import './style/weatherIcon.css'
+import './style/font.css'
 import { Provider } from 'react-redux'
 import store from './store'
+import { routerData } from './router'
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode >
     <Provider store={store}>
-      <Weather/>
+     <BrowserRouter>
+      <Routes>
+        {
+          routerData.map(route=>{
+              return <Route 
+                      key={route.pathname}
+                      path={route.pathname} 
+                      element={route.component}>  
+                  </Route>
+            })
+        }
+      </Routes>
+      </BrowserRouter>
     </Provider>
+   
   </React.StrictMode>
 );
 

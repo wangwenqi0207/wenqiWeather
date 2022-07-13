@@ -8,7 +8,8 @@ const states =  {
     list:{},
     now:[],
     today:'',
-    status:''
+    status:'',
+    location:''
 }
  
 const reducer = (state=states, action) => {
@@ -20,7 +21,9 @@ const reducer = (state=states, action) => {
                 now:action.payload.HeWeather6[0].now || '',
                 today:(action.payload && action.payload.HeWeather6 && action.payload.HeWeather6[0] && action.payload.HeWeather6[0].daily_forecast && action.payload.HeWeather6[0].daily_forecast[0].date) ||'',
                 province:(action.payload && action.payload.HeWeather6[0] && action.payload.HeWeather6[0].basic && action.payload.HeWeather6[0].basic.admin_area) || '',
-                status:(action.payload && action.payload.HeWeather6[0] && action.payload.HeWeather6[0].status) || ''
+                status:(action.payload && action.payload.HeWeather6[0] && action.payload.HeWeather6[0].status) || '',
+                location:((action.payload && action.payload.HeWeather6[0] && action.payload.HeWeather6[0].basic && action.payload.HeWeather6[0].basic.lon) || '') + ',' +((action.payload && action.payload.HeWeather6[0] && action.payload.HeWeather6[0].basic && action.payload.HeWeather6[0].basic.lat) || ''),
+
             }
         case CITY:
             return{

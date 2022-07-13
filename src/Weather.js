@@ -2,9 +2,12 @@ import React  from 'react'
 import { connect } from 'react-redux';
 import { getThreedayWeather,addCity,addProvince } from './store/actionType'
 import { morning,afternoon,night } from './background'
-import './weather.css'
+import './style/weather.css'
 import getTime from './time'
 import getIcon from './weatherIcon'
+import {
+  Link
+} from "react-router-dom";
 
 function getBg(){
   const time = getTime()
@@ -154,7 +157,7 @@ class Weather extends React.Component {
             }
             </ul>
             <div className='check-btn-box'>
-             <p className='check-btn'>more</p>
+              <p className='check-btn'><Link to='/list'>more</Link></p>
              <svg t="1655632556336" className='more-icon'viewBox="0 0 1024 1024" version="1.1"  p-id="2140" ><path d="M120 936.256c-10.304 0-20.608-3.904-28.416-11.776-15.744-15.68-15.744-41.152 0-56.896L447.104 512 91.584 156.48c-15.744-15.68-15.744-41.152 0-56.896 15.68-15.744 41.152-15.744 56.896 0l384 384c15.744 15.68 15.744 41.152 0 56.896l-384 384C140.608 932.352 130.304 936.256 120 936.256z" p-id="2141"></path><path d="M520 936.256c-10.304 0-20.608-3.904-28.416-11.776-15.744-15.68-15.744-41.152 0-56.896L847.104 512 491.584 156.48c-15.744-15.68-15.744-41.152 0-56.896 15.68-15.744 41.152-15.744 56.896 0l384 384c15.744 15.68 15.744 41.152 0 56.896l-384 384C540.608 932.352 530.304 936.256 520 936.256z" p-id="2142"></path></svg>
             </div>
             
