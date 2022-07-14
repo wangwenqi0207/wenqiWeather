@@ -1,7 +1,12 @@
 
 import React  from 'react'
 import { connect } from 'react-redux';
+import {
+    Link
+  } from "react-router-dom";
 import './style/list.css'
+import getBackground from './getBackground'
+
 
 
 class List extends React.Component {
@@ -35,8 +40,12 @@ class List extends React.Component {
   render() {
     const { moreDay } = this.state
     // console.log(moreDay,'moreDay')
+    let url = getBackground(this.props.city)
     return (
-        <div className='list-box'>
+        <div className='list-box' style={{backgroundImage:`url(${url})`}}>
+            <div className='list-return'>
+            <Link to='/'><svg className='list-return-icon' viewBox="0 0 24 24" aria-labelledby="arrowLeftIconTitle" stroke="#fff" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#fff"> <title id="arrowLeftIconTitle">Arrow Left</title> <path d="M9 6l-6 6 6 6"/> <path d="M21 12H4"/> <path stroke-linecap="round" d="M3 12h1"/> </svg></Link>    
+            </div>
             <div className='list'>
                 {
                     moreDay && moreDay.length>0 && moreDay.map(item=>{
@@ -52,6 +61,7 @@ class List extends React.Component {
                     })
                 }
             </div> 
+            <div className='list-mask'></div>
         </div>
     );
   }

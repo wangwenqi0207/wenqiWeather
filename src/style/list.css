@@ -1,13 +1,18 @@
 .list-box{
     height: 100%;
     width: 100%;
-    background-color: #CCC;
-}
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-size:100% 100%;
+  }
 .list {
     height: 100%;
     padding: 0 0.5rem;
     display: flex;
     flex-direction: column;
+    color: #fff;
+    z-index: 60;
+    position: relative;
 }
 
 .list_row {
@@ -29,4 +34,27 @@
 
   .list-line-weather{
     justify-content: end;
+  }
+
+  .list-return{
+    position: absolute;
+    top: 0;
+    left: 0.4rem;
+    cursor: pointer;
+    z-index: 70;
+  }
+
+  .list-return-icon{
+    width: 0.9rem;
+    font-weight: 600;
+  }
+
+  .list-mask{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: rgba(0,0,0,.4);
+    top: 0;
+    left: 0;
   }
